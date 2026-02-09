@@ -400,15 +400,18 @@
     else if (noAttempts >= 2) btnYes.classList.add('grow-2');
     else btnYes.classList.add('grow-1');
 
-    // Pick random position at least 200px from cursor
-    const pad = 40;
+    // Pick random position at least 200px from cursor, fully within viewport
+    const btnRect = btnNo.getBoundingClientRect();
+    const btnW = btnRect.width || 150;
+    const btnH = btnRect.height || 50;
+    const pad = 20;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     let x, y, dist, tries = 0;
 
     do {
-      x = pad + Math.random() * (vw - 200 - pad);
-      y = pad + Math.random() * (vh - 60 - pad);
+      x = pad + Math.random() * (vw - btnW - pad * 2);
+      y = pad + Math.random() * (vh - btnH - pad * 2);
       dist = Math.sqrt((x - cursorX) ** 2 + (y - cursorY) ** 2);
       tries++;
     } while (dist < 200 && tries < 50);
