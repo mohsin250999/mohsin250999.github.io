@@ -400,21 +400,23 @@
     else if (noAttempts >= 2) btnYes.classList.add('grow-2');
     else btnYes.classList.add('grow-1');
 
-    // Pick random position at least 200px from cursor, fully within viewport
-    const btnRect = btnNo.getBoundingClientRect();
-    const btnW = btnRect.width || 150;
-    const btnH = btnRect.height || 50;
-    const pad = 20;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    // Pick random position at least 200px from cursor, clamped inside viewport
+    const btnW = btnNo.offsetWidth;
+    const btnH = btnNo.offsetHeight;
+    const maxX = window.innerWidth - btnW;
+    const maxY = window.innerHeight - btnH;
     let x, y, dist, tries = 0;
 
     do {
-      x = pad + Math.random() * (vw - btnW - pad * 2);
-      y = pad + Math.random() * (vh - btnH - pad * 2);
+      x = Math.random() * maxX;
+      y = Math.random() * maxY;
       dist = Math.sqrt((x - cursorX) ** 2 + (y - cursorY) ** 2);
       tries++;
     } while (dist < 200 && tries < 50);
+
+    // Hard clamp just in case
+    x = Math.max(0, Math.min(x, maxX));
+    y = Math.max(0, Math.min(y, maxY));
 
     // Add runaway class (switches to position:fixed) and place it
     btnNo.classList.add('runaway');
